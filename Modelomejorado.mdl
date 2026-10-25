@@ -1,0 +1,161 @@
+{UTF-8}
+Band Width=2
+	~	DegF
+	~		|
+
+Change in Furnace State=(Desired Furnace State-Furnace On)/TIME STEP
+	~	1/Minute
+	~		|
+
+Furnace On= INTEG (Change in Furnace State,
+		0)
+	~	Dmnl
+	~		|
+
+Desired Furnace State=IF THEN ELSE ( House Temperature<Lower Threshold, 1 , IF THEN ELSE\
+		 ( House Temperature>Upper Threshold
+	 , 0 , Furnace On ) )
+	~	Dmnl
+	~		|
+
+Lower Threshold=Goal Temperature-(Band Width/2)
+	~	DegF
+	~		|
+
+Upper Threshold=Goal Temperature+(Band Width/2)
+	~	DegF
+	~		|
+
+Heat Production=Furnace On*Furnace Capacity
+	~	BTU/Minute
+	~		|
+
+Conversion Factor=180
+	~	BTU/DegF
+	~		|
+
+Furnace Capacity=60
+	~	BTU/Minute
+	~		|
+
+House Temperature=Heat in House/Conversion Factor
+	~	DegF
+	~		|
+
+Heat in House= INTEG (Heat Production-Heat Loss,
+		13000)
+	~	BTU
+	~		|
+
+Goal Temperature=75
+	~	DegF
+	~		|
+
+Heat Loss=30
+	~	BTU/Minute
+	~		|
+
+********************************************************
+	.Control
+********************************************************~
+		Simulation Control Parameters
+	|
+
+FINAL TIME  = 240
+	~	Minute
+	~	The final time for the simulation.
+	|
+
+INITIAL TIME  = 0
+	~	Minute
+	~	The initial time for the simulation.
+	|
+
+SAVEPER  = 
+        TIME STEP 
+	~	Minute [0,?]
+	~	The frequency with which output is stored.
+	|
+
+TIME STEP  = 0.5
+	~	Minute [0,?]
+	~	The time step for the simulation.
+	|
+
+\\\---/// Sketch information - do not modify anything except names
+V300  Do not put anything below this section - it will be ignored
+*View 1
+$-1--1--1,0,|12||-1--1--1|-1--1--1|-1--1--1|-1--1--1|-1--1--1|96,96,133,2
+10,1,Heat in House,705,173,53,26,3,3,0,0,-1,0,0,0,0,0,0,0,0,0
+12,2,48,984,173,10,8,0,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,3,5,1,100,0,0,22,0,192,0,-1--1--1,,1|(808,173)|
+1,4,5,2,4,0,0,22,0,192,0,-1--1--1,,1|(922,173)|
+11,5,0,864,173,6,8,34,3,0,0,1,0,0,0,0,0,0,0,0,0
+10,6,Heat Loss,864,207,46,26,40,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,7,Goal Temperature,546,481,50,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,8,House Temperature,725,389,50,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,9,Conversion Factor,880,284,66,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+12,10,48,448,173,10,8,0,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,11,13,10,100,0,0,22,0,192,0,-1--1--1,,1|(503,173)|
+1,12,13,1,4,0,0,22,0,192,0,-1--1--1,,1|(606,173)|
+11,13,0,555,173,6,8,34,3,0,0,1,0,0,0,0,0,0,0,0,0
+10,14,Heat Production,555,207,60,26,40,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,15,1,8,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,16,9,8,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,17,Furnace Capacity,510,80,64,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,18,17,14,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,19,Band Width,379,480,46,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,20,Upper Threshold,568,395,63,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,21,Lower Threshold,359,396,62,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,22,Change in Furnace State,315,316,52,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,23,Desired Furnace State,485,321,61,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,24,7,21,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,25,7,20,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,26,8,23,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,27,21,23,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,28,20,23,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,29,23,22,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,30,19,21,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,31,19,20,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,32,Furnace On,356,221,46,26,3,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,33,32,22,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,34,32,23,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,35,32,14,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,36,22,32,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,37,TIME STEP,203,255,49,16,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|||128-128-128,0,0,0,0,0,0
+1,38,37,22,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+///---\\\
+:L<%^E!@
+1:Simulacióncorr.vdfx
+1:Simulación erronea.vdfx
+4:Time
+5:House Temperature
+9:Simulacióncorr
+19:133,0
+24:0
+25:240
+26:240
+23:0
+15:0,0,0,0,0,0
+27:0,
+34:0,
+42:0
+72:0
+73:0
+95:0
+96:0
+97:0
+77:0
+78:0
+102:1
+93:0
+94:0
+92:0
+91:0
+90:0
+87:0
+75:
+43:
+103:8,8,8,3,8
+105:0,0,0,0,0,0,0,0,0,0
+104:Vensim Sans|12||0-0-0|0-0-0|-1--1--1|0-0-255|192-192-192|-1--1--1
