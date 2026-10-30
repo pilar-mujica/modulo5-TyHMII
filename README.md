@@ -114,8 +114,26 @@ La temperatura describe un **diente de sierra regular entre 74 y 76 °F**, y el 
 > **Alcance de la mejora:** como la pérdida de calor es constante, la energía total consumida es la misma en ambos modelos. La mejora está en la **drástica reducción de arranques**, que en un equipo real implica menos desgaste y menos pérdidas de encendido. El ancho de banda define el compromiso: más angosta, más confort y más arranques; más ancha, menos arranques y más oscilación.
 
 ---
+## 5. Simplificación: modelado del calor del horno
 
-## 5. Conclusiones
+En los tres modelos el horno funciona en modo **todo o nada**: cuando está encendido entrega siempre su potencia máxima (`Furnace Capacity` = 60 BTU/min) y, si no, entrega 0. La producción de calor no depende de *cuánto* falta para llegar a la temperatura de referencia, sino solo de *si* falta. A eso se suma una pérdida de calor constante. Es una simplificación válida para analizar la consistencia dimensional, pero no la forma más eficiente de controlar el sistema.
+
+**Analogía: llenar un vaso con agua**
+
+- **Control on/off (nuestro modelo):** es como llenar un vaso con una manguera a máxima presión, abriéndola y cerrándola de golpe. Se pasa del nivel, salpica y obliga a abrir y cerrar continuamente. Con histéresis se abre y cierra menos veces, pero siempre a todo o nada.
+- **Control proporcional (alternativa):** es como usar una canilla regulable que se va cerrando a medida que el vaso se llena. Mucho caudal cuando está vacío, poco cuando está casi lleno. El nivel se acerca suavemente al objetivo, sin pasarse ni cortar el agua de golpe.
+
+En el modelo, esto se lograría haciendo que la producción de calor dependa de la brecha de temperatura, con un límite en la potencia máxima del horno:
+
+    Heat Production = MIN(Furnace Capacity, MAX(0, Gain * Temperature Gap))
+
+donde `Gain` (BTU/(Minute*DegF)) define cuánto calor se entrega por cada grado de diferencia.
+
+En electrónica, es la diferencia entre un comparador, que satura a uno u otro extremo, y un amplificador con **realimentación negativa** que trabaja en su zona lineal. Los calefactores modernos *modulantes* funcionan así: regulan la llama en lugar de prenderla y apagarla, con lo que reducen los arranques y las pérdidas de encendido.
+
+> **Nota:** un control proporcional puro deja un pequeño error permanente. Para compensar la pérdida constante de 30 BTU/min, la casa se estabiliza un poco por debajo de la referencia (Temperature Gap = 30 / Gain). Un `Gain` más alto reduce ese error.
+---
+## 6. Conclusiones
 
 - Un modelo puede ser sintácticamente válido y simular sin errores, y aun así ser **conceptualmente incorrecto**.
 - **Todo flujo debe tener unidades de stock por unidad de tiempo.** El *Units Check* permite detectar la falla, pero corregirla exige revisar el modelo mental: el calor se acumula; la temperatura se deriva de él.
